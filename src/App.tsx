@@ -118,7 +118,7 @@ export const App = () => {
     setLoading(true);
     Promise.resolve().then(() => {
         const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
-
+        // @ts-ignore
         const result = selectedItems.map(item => item?.id).reduce((acc, pointer) => {
             acc[pointer] = "1";
             return acc;
@@ -136,6 +136,7 @@ export const App = () => {
   };
 
   if (thxShow) {
+    // @ts-ignore
     return <ThxLayout selectedItems={selectedItems} />;
   }
 
