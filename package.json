@@ -1,13 +1,15 @@
 {
-  "name": "ghk_alfa_dom_1",
+  "name": "alfa-dom",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --base=/ghk_alfa_dom_1/",
+    "build": "tsc && vite build --base=/alfa-dom",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@alfalab/core-components": "^47.3.0",
@@ -27,6 +29,7 @@
     "eslint": "^9.3.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11"
   },

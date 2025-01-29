@@ -16,6 +16,7 @@ import { Gap } from "@alfalab/core-components/gap";
 import { BottomSheet } from "@alfalab/core-components/bottom-sheet";
 import { ThxLayout } from "./thx/ThxLayout.tsx";
 import { LS, LSKeys } from "./ls";
+import {sendDataToGAServices} from "./utils/events.ts";
 
 interface Service {
   title: string;
@@ -28,6 +29,7 @@ interface Service {
 const services: Array<Service> =
     [
       {
+          id: 'everyday_service',
         title: "Сервисы на каждый день",
         description: "Клининг, химчистка, доставка продуктов, помощь в быту",
         image: himka,
@@ -37,16 +39,18 @@ const services: Array<Service> =
         ],
       },
       {
-        title: "Покупка-продажа недвижимости",
+          id: 'buy_sale_aparts',
+        title: "Покупка-продажа жилья",
         description: "Полный цикл сделок с жилой недвижимостью",
         image: buysell,
-        modalTitle: "Покупка-продажа недвижимости",
+        modalTitle: "Покупка-продажа жилья",
         modalText: [
           "Вы сможете искать объекты недвижимости для покупки или размещать объявления о продаже, получать уведомления о новых предложениях, сравнивать цены, вести переписку с контрагентами, а также заказывать проверку документов\n" +
           "перед совершением сделки."
         ],
       },
       {
+          id: 'arenda',
         title: "Аренда",
         description: "Удобные решения для сдачи и аренды жилья",
         image: rent,
@@ -56,6 +60,7 @@ const services: Array<Service> =
         ],
       },
       {
+          id: 'remont',
         title: "Все для ремонта",
         description: "Дизайн-проект, консультации экспертов, кредитование",
         image: remont,
@@ -65,6 +70,7 @@ const services: Array<Service> =
         ],
       },
       {
+          id: 'ipoteka',
         title: "Ипотека",
         description: "Оформление ипотеки и консультации",
         image: mortgage,
@@ -74,6 +80,7 @@ const services: Array<Service> =
         ],
       },
       {
+          id: 'consultation',
         title: "Консультации экспертов",
         description: "Юристы и фин. консультанты ответят на ваши вопросы",
         image: consult,
@@ -83,6 +90,7 @@ const services: Array<Service> =
         ],
       },
       {
+          id: "safety_management",
         title: "Безопасность и управление",
         description: "Страхование, голосования жильцов, общение с УК",
         image: security,
@@ -109,6 +117,18 @@ export const App = () => {
   const submit = () => {
     setLoading(true);
     Promise.resolve().then(() => {
+        const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
+
+        const result = selectedItems.map(item => item?.id).reduce((acc, pointer) => {
+            acc[pointer] = "1";
+            return acc;
+        }, {});
+
+        sendDataToGAServices({ ...emptyObj, ...result }).then(() => {
+            LS.setItem(LSKeys.ShowThx, true);
+            setThx(true);
+            setLoading(false);
+        });
       LS.setItem(LSKeys.ShowThx, true);
       setThx(true);
       setLoading(false);
@@ -116,7 +136,7 @@ export const App = () => {
   };
 
   if (thxShow) {
-    return <ThxLayout />;
+    return <ThxLayout selectedItems={selectedItems} />;
   }
 
   return (
@@ -132,7 +152,18 @@ export const App = () => {
           >
             Альфа-Дом
           </Typography.TitleResponsive>
+
           <Gap size={8} />
+
+            <Typography.Text
+                view="primary-medium"
+                style={{ textAlign: "center", fontWeight: "light", color: "#7F7F83" }}
+            >
+                Полезные сервисы для дома
+            </Typography.Text>
+
+          <Gap size={16} />
+
           <Typography.Text
             view="primary-medium"
             color="primary"
@@ -328,7 +359,11 @@ export const App = () => {
           block
           view="primary"
           size="xl"
-          hint={`Выберите до ${MAX_SERVICES} категорий`}
+          hint={
+              selectedItems.length === 0
+                  ? `Выберите до ${MAX_SERVICES} любых категорий`
+                  : "Продолжить"
+          }
           onClick={submit}
         >
           {selectedItems.length} из {MAX_SERVICES} выбрано

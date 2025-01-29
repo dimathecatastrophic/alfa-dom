@@ -1,56 +1,108 @@
+import { useState } from "react";
+
 import { Typography } from "@alfalab/core-components/typography";
 import { ButtonMobile } from "@alfalab/core-components/button/mobile";
+import { Input } from "@alfalab/core-components/input";
+import { Gap } from "@alfalab/core-components/gap";
+import { MaskedInput } from "@alfalab/core-components/masked-input";
+import { sendDataToGAServicesWithContacts } from "../utils/events.ts";
+
 import cool from "../assets/cool.png";
+
 import { thxSt } from "./style.css";
 import { appSt } from "../style.css.ts";
-import { Input } from "@alfalab/core-components/input";
-import { useState } from "react";
-import { Gap } from "@alfalab/core-components/gap";
 
-export const ThxLayout = () => {
-  const [value, setValue] = useState("");
+import { Service } from "../types.ts";
+
+interface ThxLayoutProps {
+  selectedItems: Array<Service | null>;
+}
+
+export const ThxLayout = ({ selectedItems }: ThxLayoutProps) => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const submit = () => {
+    console.log(selectedItems);
+    // @ts-ignore
+    const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
+
+    const result = selectedItems.map(item => item?.id).reduce((acc, pointer) => {
+      acc[pointer] = "1";
+      return acc;
+    }, {});
+
+    setLoading(true);
+    sendDataToGAServicesWithContacts({
+     ...emptyObj,
+      ...result,
+      contacts: `${name}, ${phone}`,
+    }).then(() => {
+      setLoading(false);
+    });
+  };
 
   return (
-    <>
-      <div className={thxSt.container}>
-        <img
-          alt="Картинка смайлика"
-          src={cool}
-          width={200}
-          className={thxSt.rocket}
-        />
-        <Typography.TitleResponsive
-          font="system"
-          tag="h1"
-          view="medium"
-          defaultMargins={false}
-          weight="bold"
-          className={thxSt.title}
-        >
-          Уже разрабатываем
-        </Typography.TitleResponsive>
-        <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
-          Если хотите помочь или принять участие в тестировании сервиса —
-          оставьте ваши данные для связи
-        </Typography.Text>
+      <>
+        <div className={thxSt.container}>
+          <img
+              alt="Картинка смайлика"
+              src={cool}
+              width={200}
+              className={thxSt.rocket}
+          />
+          <Typography.TitleResponsive
+              font="system"
+              tag="h1"
+              view="medium"
+              defaultMargins={false}
+              weight="bold"
+              className={thxSt.title}
+          >
+            Уже разрабатываем
+          </Typography.TitleResponsive>
+          <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
+            Хотите протестировать новый сервис и повлиять на его развитие?
+            Напишите имя и последние 4 цифры вашего номера телефона, и мы свяжемся
+            с вами
+          </Typography.Text>
 
-        <Gap size={32} />
+          <Gap size={32} />
 
-        <Input
-          block={true}
-          placeholder="Email или ник в telegram"
-          labelView={"outer"}
-          size={48}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
+          <Input
+              block={true}
+              placeholder="Имя"
+              labelView="outer"
+              size={48}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+          />
 
-      <div className={appSt.bottomBtn}>
-        <ButtonMobile block view="primary" href="">
-          Отправить
-        </ButtonMobile>
-      </div>
-    </>
+          <Gap size={8} />
+
+          <MaskedInput
+              value={phone}
+              onChange={(_, payload) => setPhone(payload.value)}
+              mask={[/\d/, /\d/, /\d/, /\d/]}
+              placeholder="4 цифры номера телефона"
+              labelView="outer"
+              size={48}
+              block={true}
+          />
+        </div>
+
+        <div className={appSt.bottomBtn}>
+          <ButtonMobile
+              block
+              loading={loading}
+              onClick={submit}
+              view="primary"
+              href=""
+          >
+            Отправить
+          </ButtonMobile>
+        </div>
+      </>
   );
 };
