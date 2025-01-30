@@ -17,14 +17,15 @@ import {LS, LSKeys} from "../ls";
 
 interface ThxLayoutProps {
   selectedItems: Array<Service | null>;
+  handleThx: () => void;
 }
 
-export const ThxLayout = ({ selectedItems }: ThxLayoutProps) => {
+export const ThxLayout = ({ selectedItems, handleThx }: ThxLayoutProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const submit = ({handleThx}: {handleThx: () => Promise<void>}) => {
+  const submit = () => {
     if (name && phone) {
       // @ts-ignore
       const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
@@ -101,6 +102,7 @@ export const ThxLayout = ({ selectedItems }: ThxLayoutProps) => {
               block
               disabled={name.length < 1 || phone.length < 4}
               loading={loading}
+              // @ts-ignore
               onClick={submit}
               view="primary"
               href=""
