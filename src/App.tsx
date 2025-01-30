@@ -17,6 +17,7 @@ import { BottomSheet } from "@alfalab/core-components/bottom-sheet";
 import { ThxLayout } from "./thx/ThxLayout.tsx";
 import { LS, LSKeys } from "./ls";
 import {sendDataToGAServices} from "./utils/events.ts";
+import {ThankYou} from "./ThankYou/ThankYou.tsx";
 
 interface Service {
   title: string;
@@ -113,6 +114,7 @@ export const App = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedItems, setSelectedItems] = useState<Array<Service | null>>([]);
+  const [isContactsFormVisible, setIsContactsFormVisible] = useState(false);
 
   const submit = () => {
     setLoading(true);
@@ -125,19 +127,19 @@ export const App = () => {
         }, {});
 
         sendDataToGAServices({ ...emptyObj, ...result }).then(() => {
-            LS.setItem(LSKeys.ShowThx, true);
-            setThx(true);
             setLoading(false);
+            setIsContactsFormVisible(true);
         });
-      LS.setItem(LSKeys.ShowThx, true);
-      setThx(true);
-      setLoading(false);
     });
   };
 
-  if (thxShow) {
+    if (thxShow) {
+        return <ThankYou />;
+    }
+
+  if (isContactsFormVisible) {
     // @ts-ignore
-    return <ThxLayout selectedItems={selectedItems} />;
+    return <ThxLayout selectedItems={selectedItems} handleThx={() => setThx(true)} />;
   }
 
   return (

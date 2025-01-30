@@ -13,6 +13,7 @@ import { thxSt } from "./style.css";
 import { appSt } from "../style.css.ts";
 
 import { Service } from "../types.ts";
+import {LS, LSKeys} from "../ls";
 
 interface ThxLayoutProps {
   selectedItems: Array<Service | null>;
@@ -23,24 +24,27 @@ export const ThxLayout = ({ selectedItems }: ThxLayoutProps) => {
   const [phone, setPhone] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const submit = () => {
-    console.log(selectedItems);
-    // @ts-ignore
-    const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
-    // @ts-ignore
-    const result = selectedItems.map(item => item?.id).reduce((acc, pointer) => {
-      acc[pointer] = "1";
-      return acc;
-    }, {});
+  const submit = ({handleThx}: {handleThx: () => Promise<void>}) => {
+    if (name && phone) {
+      // @ts-ignore
+      const emptyObj = {everyday_service: '0', remont: '0', arenda: '0', ipoteka: "0", safety_management: "0", buy_sale_aparts: "0", consultation: "0"}
+      // @ts-ignore
+      const result = selectedItems.map(item => item?.id).reduce((acc, pointer) => {
+        acc[pointer] = "1";
+        return acc;
+      }, {});
 
-    setLoading(true);
-    sendDataToGAServicesWithContacts({
-     ...emptyObj,
-      ...result,
-      contacts: `${name}, ${phone}`,
-    }).then(() => {
-      setLoading(false);
-    });
+      setLoading(true);
+      sendDataToGAServicesWithContacts({
+       ...emptyObj,
+        ...result,
+        contacts: `${name}, ${phone}`,
+      }).then(() => {
+        setLoading(false);
+        LS.setItem(LSKeys.ShowThx, true);
+        handleThx();
+      });
+      }
   };
 
   return (
@@ -95,6 +99,7 @@ export const ThxLayout = ({ selectedItems }: ThxLayoutProps) => {
         <div className={appSt.bottomBtn}>
           <ButtonMobile
               block
+              disabled={name.length < 1 || phone.length < 4}
               loading={loading}
               onClick={submit}
               view="primary"
