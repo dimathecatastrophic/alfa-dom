@@ -33,7 +33,6 @@ const bottomBtn = style({
   background: "white",
   position: "fixed",
   zIndex: 2,
-  maxWidth: '500px',
   width: "100%",
   padding: "12px",
   bottom: 0,
