@@ -10,7 +10,7 @@ const container = style({
 });
 
 const rocket = style({
-  marginTop: "5rem",
+  marginTop: "24px",
 });
 
 const title = style({
