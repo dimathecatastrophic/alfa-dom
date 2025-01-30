@@ -51,7 +51,7 @@ export const sendDataToGAServicesWithContacts = async (payload: Payload) => {
                     ...payload,
                 }),
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "text/plain;charset=utf-8",
                 },
             },
         );
