@@ -1,16 +1,30 @@
 import { Typography } from "@alfalab/core-components/typography";
 import cool from "../assets/cool.png";
 import { thxSt } from "./style.css";
-import { Gap } from "@alfalab/core-components/gap";
 
 export const ThankYou = () => (
     <>
-      <div className={thxSt.container} style={{ height: "100vh" }}>
-        <img alt="Картинка смайлика" src={cool} width={200} />
-        <Gap size={48} />
-        <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
-          Мы получили Ваши данные и свяжемся с Вами в ближайшее время
-        </Typography.Text>
-      </div>
+        <div className={thxSt.container}>
+            <img
+                alt="Картинка смайлика"
+                src={cool}
+                className={thxSt.rocket}
+                width={200}
+            />
+            <Typography.TitleResponsive
+                font="system"
+                tag="h1"
+                view="medium"
+                defaultMargins={false}
+                weight="bold"
+                className={thxSt.title}
+            >
+                Спасибо!
+            </Typography.TitleResponsive>
+            <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
+                Мы получили ваши данные. Если тестирование будет открыто, мы расскажем,
+                как присоединиться.
+            </Typography.Text>
+        </div>
     </>
 );

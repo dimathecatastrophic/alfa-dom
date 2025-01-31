@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import {style} from "@vanilla-extract/css";
 
 const container = style({
     display: "flex",
@@ -7,6 +7,7 @@ const container = style({
     alignItems: "center",
     padding: "0 1rem",
     textAlign: "center",
+    height: "100vh",
 });
 
 const rocket = style({

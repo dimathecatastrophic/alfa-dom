@@ -68,9 +68,7 @@ export const ThxLayout = ({ selectedItems, handleThx }: ThxLayoutProps) => {
             Уже разрабатываем
           </Typography.TitleResponsive>
           <Typography.Text tag="p" view="primary-medium" defaultMargins={false}>
-            Хотите протестировать новый сервис и повлиять на его развитие?
-            Напишите имя и последние 4 цифры вашего номера телефона, и мы свяжемся
-            с вами
+            Хотите протестировать новый сервис и повлиять на его развитие? Напишите имя и последние 4 цифры вашего номера телефона — расскажем, как принять участие.
           </Typography.Text>
 
           <Gap size={32} />
@@ -90,7 +88,7 @@ export const ThxLayout = ({ selectedItems, handleThx }: ThxLayoutProps) => {
               value={phone}
               onChange={(_, payload) => setPhone(payload.value)}
               mask={[/\d/, /\d/, /\d/, /\d/]}
-              placeholder="4 цифры номера телефона"
+              placeholder="4 последние цифры номера телефона"
               labelView="outer"
               size={48}
               block={true}
